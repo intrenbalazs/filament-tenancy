@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use TomatoPHP\FilamentTenancy\FilamentTenancyServiceProvider;
+use TomatoPHP\FilamentTenancy\Http\Controllers\LoginUrl;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([
     'web',
     'universal',
-    \TomatoPHP\FilamentTenancy\FilamentTenancyServiceProvider::TENANCY_IDENTIFICATION,
+    FilamentTenancyServiceProvider::TENANCY_IDENTIFICATION,
 ])->group(function () {
     if(config('filament-tenancy.features.impersonation')) {
-        Route::get('/login/url', [\TomatoPHP\FilamentTenancy\Http\Controllers\LoginUrl::class, 'index']);
+        Route::get('/login/url', [LoginUrl::class, 'index']);
     }
 
     // Your Tenant routes here

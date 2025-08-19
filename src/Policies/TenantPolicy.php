@@ -2,6 +2,7 @@
 
 namespace TomatoPHP\FilamentTenancy\Policies;
 
+use Spatie\Permission\Models\Permission;
 use App\Models\User;
 use TomatoPHP\FilamentTenancy\Models\Tenant;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -12,7 +13,7 @@ class TenantPolicy
 
     public function hasRoles(): bool
     {
-        return class_exists(\Spatie\Permission\Models\Permission::class);
+        return class_exists(Permission::class);
     }
 
     /**

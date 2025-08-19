@@ -2,6 +2,7 @@
 
 namespace TomatoPHP\FilamentTenancy\Http\Controllers;
 
+use Exception;
 use App\Http\Controllers\Controller;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class AuthController extends Controller
         try {
             return Socialite::driver($provider)
                 ->redirect();
-        }catch (\Exception $exception){
+        }catch (Exception $exception){
             Notification::make()
                 ->title('Error')
                 ->body('Something went wrong!')
@@ -95,7 +96,7 @@ class AuthController extends Controller
 
             return redirect()->to(request()->getScheme()."://" . $record->domains[0]->domain . '.' . config('app.domain') . '/login/url?token=' . $token->token . '&email=' . $record->email);
         }
-        catch (\Exception $exception){
+        catch (Exception $exception){
             Notification::make()
                 ->title('Error')
                 ->body('Something went wrong!')

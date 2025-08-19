@@ -2,6 +2,9 @@
 
 namespace TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Exception;
 use TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -14,12 +17,12 @@ class EditTenant extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('open')
+            Action::make('open')
                 ->label(trans('filament-tenancy::messages.actions.view'))
                 ->icon('heroicon-s-link')
                 ->url(fn($record) => request()->getScheme() . "://" . $record->domains()->first()?->domain . '.' . config('filament-tenancy.central_domain') . '/' . filament('filament-tenancy')->panel)
                 ->openUrlInNewTab(),
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->icon('heroicon-s-trash')
                 ->label(trans('filament-tenancy::messages.actions.delete')),
         ];
@@ -46,8 +49,8 @@ class EditTenant extends EditRecord
             DB::purge('dynamic');
 
             DB::connection('dynamic')->getPdo();
-        } catch (\Exception $e) {
-            throw new \Exception("Failed to connect to tenant database: {$dbName}");
+        } catch (Exception $e) {
+            throw new Exception("Failed to connect to tenant database: {$dbName}");
         }
 
         $user = DB::connection('dynamic')
