@@ -50,7 +50,7 @@ class EditTenant extends EditRecord
 
             DB::connection('dynamic')->getPdo();
         } catch (Exception $e) {
-            throw new Exception("Failed to connect to tenant database: {$dbName}");
+            throw new Exception('Failed to connect to tenant database.', 0, $e);
         }
 
         $user = DB::connection('dynamic')

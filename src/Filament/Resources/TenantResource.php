@@ -6,7 +6,6 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Set;
-use Str;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -16,6 +15,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Illuminate\Support\Str;
 use TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource\RelationManagers\DomainsRelationManager;
 use TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource\Pages\ListTenants;
 use TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource\Pages\CreateTenant;
@@ -177,7 +177,7 @@ class TenantResource extends Resource
                             ->dehydrated(fn ($state): bool => filled($state))
                             ->live(debounce: 500)
                             ->same('passwordConfirmation'),
-                        TextInput::make('password_confirmation')
+                        TextInput::make('passwordConfirmation')
                             ->label(trans('filament-tenancy::messages.columns.passwordConfirmation'))
                             ->password()
                             ->revealable(filament()->arePasswordsRevealable())

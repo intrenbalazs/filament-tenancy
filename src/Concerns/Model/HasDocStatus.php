@@ -87,16 +87,23 @@ trait HasDocStatus
 
     public function submit($onlyIfDraft = true): static
     {
-        if ($onlyIfDraft && ! $this->isDraft()) {
+        // If we only want to submit drafts and this isn't a draft, return early
+        if ($onlyIfDraft && !$this->isDraft()) {
             return $this;
         }
-        if ($this->isDraft()) throw new RuntimeException('Only Draft Documents can be Submitted.');
+
+        // If forcing submission but it's not a draft, throw exception
+        if (!$onlyIfDraft && !$this->isDraft()) {
+            throw new RuntimeException('Document is not in draft status and cannot be submitted.');
+        }
+
         $this->submitting();
         $this->doc_status = DocStatus::SUBMITTED;
         $this->submitted_by = auth()->id();
         $this->submitted_at = now();
         $this->saveQuietly();
         $this->submitted();
+
         return $this;
     }
 
