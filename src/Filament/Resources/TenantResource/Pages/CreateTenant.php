@@ -2,6 +2,10 @@
 
 namespace TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource\Pages;
 
+use Exception;
+use Filament\Support\Enums\Width;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Facades\FilamentView;
@@ -22,6 +26,7 @@ class CreateTenant extends CreateRecord
     {
         $record = parent::handleRecordCreation(collect($data)->except('domain')->toArray());
         $record->domains()->create(['domain' => collect($data)->get('domain')]);
+        Artisan::call('route:clear');
         return $record;
     }
 
@@ -71,8 +76,8 @@ class CreateTenant extends CreateRecord
             DB::purge('dynamic');
 
             DB::connection('dynamic')->getPdo();
-        } catch (\Exception $e) {
-            throw new \Exception("Failed to connect to tenant database: {$dbName}");
+        } catch (Exception $e) {
+            throw new Exception("Failed to connect to tenant database: {$dbName}. Error: " . $e->getMessage(), 0, $e);
         }
 
         $data = [
@@ -110,12 +115,17 @@ class CreateTenant extends CreateRecord
      */
     private function createTenantRecord(array $data)
     {
-        \Log::info("Saving Tenant");
+        Log::info("Saving Tenant");
         $record = new Tenant(collect($data)->except('domain')->toArray());
         $record->saveOrFail();
-        \Log::info("Saving Domains");
+        Log::info("Saving Domains");
         $record = $record::find($record->id);
         $record->domains()->create(['domain' => collect($data)->get('domain')]);
         return $record;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

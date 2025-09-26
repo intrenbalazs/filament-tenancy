@@ -2,12 +2,14 @@
 
 namespace TomatoPHP\FilamentTenancy\Livewire;
 
+use stdClass;
+use Filament\Schemas\Schema;
+use Exception;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\SimplePage;
@@ -22,10 +24,10 @@ class RegisterOtp extends SimplePage
     use InteractsWithFormActions;
     use WithRateLimiting;
 
-    protected static string $view = 'filament-tenancy::livewire.register-otp';
+    protected string $view = 'filament-tenancy::livewire.register-otp';
 
     public array $data;
-    public \stdClass $user;
+    public stdClass $user;
     public string $otp;
 
     public function mount(): void
@@ -39,9 +41,9 @@ class RegisterOtp extends SimplePage
         }
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             TextInput::make('otp')
                 ->label('OTP Code')
                 ->numeric()
@@ -117,7 +119,7 @@ class RegisterOtp extends SimplePage
     {
         return Action::make('getResendAction')
             ->requiresConfirmation()
-            ->form([
+            ->schema([
                 TextInput::make('email')
                     ->required()
                     ->email()
@@ -163,7 +165,7 @@ class RegisterOtp extends SimplePage
 
                     Http::post(config('services.discord.otp-webhook'), $params)->json();
 
-                }catch (\Exception $e){
+                }catch (Exception $e){
                     Notification::make()
                         ->title('Something went wrong')
                         ->danger()

@@ -2,6 +2,8 @@
 
 namespace TomatoPHP\FilamentTenancy\Http\Controllers;
 
+use TomatoPHP\FilamentTenancy\Models\Tenant;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -17,9 +19,9 @@ class LoginUrl extends Controller
             'email' => "required|string|email|max:255",
         ]);
 
-        $tenant = \TomatoPHP\FilamentTenancy\Models\Tenant::query()->where('email', $request->get('email'))->first();
+        $tenant = Tenant::query()->where('email', $request->get('email'))->first();
         if($tenant){
-            $user =  \App\Models\User::query()->where('email', $tenant->email)->first();
+            $user =  User::query()->where('email', $tenant->email)->first();
             if($user){
                 $user->update([
                     'name' => $tenant->name,

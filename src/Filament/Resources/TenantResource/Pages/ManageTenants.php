@@ -2,6 +2,7 @@
 
 namespace TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource\Pages;
 
+use Filament\Actions\CreateAction;
 use TomatoPHP\FilamentTenancy\Filament\Resources\TenantResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
@@ -13,7 +14,7 @@ class ManageTenants extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }
